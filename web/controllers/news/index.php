@@ -119,7 +119,7 @@ $app->match('/news/create', function () use ($app) {
     $initial_data = array(
 		'news_texte' => '', 
 		'news_date' => date("Y-m-d"), 
-		'news_published' => '1', 
+		'news_published' => true, 
     );
 
     $form = $app['form.factory']->createBuilder('form', $initial_data);
@@ -128,7 +128,7 @@ $app->match('/news/create', function () use ($app) {
 
 	$form = $form->add('news_texte', 'textarea', array('required' => true));
 	$form = $form->add('news_date', 'text', array('required' => true));
-	$form = $form->add('news_published', 'text', array('required' => true));
+	$form = $form->add('news_published', 'checkbox', array('required' => false));
 
 
     $form = $form->getForm();
@@ -141,7 +141,7 @@ $app->match('/news/create', function () use ($app) {
             $data = $form->getData();
 
             $update_query = "INSERT INTO `news` (`news_texte`, `news_date`, `news_published`) VALUES (?, ?, ?)";
-            $app['db']->executeUpdate($update_query, array($data['news_texte'], $data['news_date'], $data['news_published']));            
+            $app['db']->executeUpdate($update_query, array($data['news_texte'], $data['news_date'], $data['news_published']?1:0));            
 
 
             $app['session']->getFlashBag()->add(
@@ -183,7 +183,7 @@ $app->match('/news/edit/{id}', function ($id) use ($app) {
     $initial_data = array(
 		'news_texte' => $row_sql['news_texte'], 
 		'news_date' => $row_sql['news_date'], 
-		'news_published' => $row_sql['news_published'], 
+		'news_published' => $row_sql['news_published']==1?true:false, 
 
     );
 
@@ -193,7 +193,7 @@ $app->match('/news/edit/{id}', function ($id) use ($app) {
 
 	$form = $form->add('news_texte', 'textarea', array('required' => true));
 	$form = $form->add('news_date', 'text', array('required' => true));
-	$form = $form->add('news_published', 'text', array('required' => true));
+	$form = $form->add('news_published', 'checkbox', array('required' => false));
 
 
     $form = $form->getForm();
@@ -206,7 +206,7 @@ $app->match('/news/edit/{id}', function ($id) use ($app) {
             $data = $form->getData();
 
             $update_query = "UPDATE `news` SET `news_texte` = ?, `news_date` = ?, `news_published` = ? WHERE `news_id` = ?";
-            $app['db']->executeUpdate($update_query, array($data['news_texte'], $data['news_date'], $data['news_published'], $id));            
+            $app['db']->executeUpdate($update_query, array($data['news_texte'], $data['news_date'], $data['news_published']?1:0, $id));            
 
 
             $app['session']->getFlashBag()->add(

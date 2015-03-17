@@ -122,7 +122,7 @@ $app->match('/tourdate/create', function () use ($app) {
 		'tourdate_who' => '', 
 		'tourdate_when' => '', 
 		'tourdate_link' => '', 
-		'tourdate_published' => '1', 
+		'tourdate_published' => true, 
     );
 
     $form = $app['form.factory']->createBuilder('form', $initial_data);
@@ -133,7 +133,7 @@ $app->match('/tourdate/create', function () use ($app) {
 	$form = $form->add('tourdate_who', 'text', array('required' => true));
 	$form = $form->add('tourdate_when', 'text', array('required' => true));
 	$form = $form->add('tourdate_link', 'text', array('required' => false));
-	$form = $form->add('tourdate_published', 'text', array('required' => true));
+	$form = $form->add('tourdate_published', 'checkbox', array('required' => false));
 
 
     $form = $form->getForm();
@@ -146,7 +146,7 @@ $app->match('/tourdate/create', function () use ($app) {
             $data = $form->getData();
 
             $update_query = "INSERT INTO `tourdate` (`tourdate_where`, `tourdate_who`, `tourdate_when`, `tourdate_link`, `tourdate_published`) VALUES (?, ?, ?, ?, ?)";
-            $app['db']->executeUpdate($update_query, array($data['tourdate_where'], $data['tourdate_who'], $data['tourdate_when'], $data['tourdate_link'], $data['tourdate_published']));            
+            $app['db']->executeUpdate($update_query, array($data['tourdate_where'], $data['tourdate_who'], $data['tourdate_when'], $data['tourdate_link'], $data['tourdate_published']?1:0));            
 
 
             $app['session']->getFlashBag()->add(
@@ -190,7 +190,7 @@ $app->match('/tourdate/edit/{id}', function ($id) use ($app) {
 		'tourdate_who' => $row_sql['tourdate_who'], 
 		'tourdate_when' => $row_sql['tourdate_when'], 
 		'tourdate_link' => $row_sql['tourdate_link'], 
-		'tourdate_published' => $row_sql['tourdate_published'], 
+		'tourdate_published' => $row_sql['tourdate_published']==1?true:false, 
     );
 
 
@@ -201,7 +201,7 @@ $app->match('/tourdate/edit/{id}', function ($id) use ($app) {
 	$form = $form->add('tourdate_who', 'text', array('required' => true));
 	$form = $form->add('tourdate_when', 'text', array('required' => true));
 	$form = $form->add('tourdate_link', 'text', array('required' => false));
-	$form = $form->add('tourdate_published', 'text', array('required' => true));
+	$form = $form->add('tourdate_published', 'checkbox', array('required' => false));
 
 
     $form = $form->getForm();
@@ -214,7 +214,7 @@ $app->match('/tourdate/edit/{id}', function ($id) use ($app) {
             $data = $form->getData();
 
             $update_query = "UPDATE `tourdate` SET `tourdate_where` = ?, `tourdate_who` = ?, `tourdate_when` = ?, `tourdate_link` = ?, `tourdate_published` = ? WHERE `tourdate_id` = ?";
-            $app['db']->executeUpdate($update_query, array($data['tourdate_where'], $data['tourdate_who'], $data['tourdate_when'], $data['tourdate_link'], $data['tourdate_published'], $id));            
+            $app['db']->executeUpdate($update_query, array($data['tourdate_where'], $data['tourdate_who'], $data['tourdate_when'], $data['tourdate_link'], $data['tourdate_published']?1:0, $id));            
 
 
             $app['session']->getFlashBag()->add(
