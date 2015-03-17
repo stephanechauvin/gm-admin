@@ -10,7 +10,6 @@
  * file that was distributed with this source code.
  */
 
-
 require_once __DIR__.'/../../../vendor/autoload.php';
 require_once __DIR__.'/../../../src/app.php';
 
@@ -127,7 +126,7 @@ $app->match('/news/create', function () use ($app) {
 
 
 	$form = $form->add('news_texte', 'textarea', array('required' => true));
-	$form = $form->add('news_date', 'text', array('required' => true));
+	$form = $form->add('news_date', 'date', array('required' => true, 'input' => 'string' ));
 	$form = $form->add('news_published', 'checkbox', array('required' => false));
 
 
@@ -182,7 +181,7 @@ $app->match('/news/edit/{id}', function ($id) use ($app) {
     
     $initial_data = array(
 		'news_texte' => $row_sql['news_texte'], 
-		'news_date' => $row_sql['news_date'], 
+		'news_date' => explode(" ", $row_sql['news_date'])[0], 
 		'news_published' => $row_sql['news_published']==1?true:false, 
 
     );
@@ -192,7 +191,7 @@ $app->match('/news/edit/{id}', function ($id) use ($app) {
 
 
 	$form = $form->add('news_texte', 'textarea', array('required' => true));
-	$form = $form->add('news_date', 'text', array('required' => true));
+	$form = $form->add('news_date', 'date', array('required' => true, 'input' => 'string' ));
 	$form = $form->add('news_published', 'checkbox', array('required' => false));
 
 

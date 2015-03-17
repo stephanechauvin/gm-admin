@@ -10,6 +10,7 @@
  * file that was distributed with this source code.
  */
 
+ini_set('date.timezone', 'Europe/Paris');
 
 class queryData {
     public $start;

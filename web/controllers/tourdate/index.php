@@ -44,9 +44,9 @@ $app->match('/tourdate/list', function (Symfony\Component\HttpFoundation\Request
     
     $table_columns = array(
 		'tourdate_id', 
-		'tourdate_where', 
-		'tourdate_who', 
-		'tourdate_when', 
+        'tourdate_who', 
+        'tourdate_when', 
+        'tourdate_where', 
 		'tourdate_link', 
 		'tourdate_published', 
     );
@@ -96,9 +96,9 @@ $app->match('/tourdate', function () use ($app) {
     
 	$table_columns = array(
 		'tourdate_id', 
-		'tourdate_where', 
-		'tourdate_who', 
-		'tourdate_when', 
+        'tourdate_who', 
+        'tourdate_when', 
+        'tourdate_where', 
 		'tourdate_link', 
 		'tourdate_published', 
     );
@@ -118,9 +118,9 @@ $app->match('/tourdate', function () use ($app) {
 $app->match('/tourdate/create', function () use ($app) {
     
     $initial_data = array(
+        'tourdate_who' => '', 
+        'tourdate_when' => date("Y-m-d"), 
 		'tourdate_where' => '', 
-		'tourdate_who' => '', 
-		'tourdate_when' => '', 
 		'tourdate_link' => '', 
 		'tourdate_published' => true, 
     );
@@ -129,9 +129,9 @@ $app->match('/tourdate/create', function () use ($app) {
 
 
 
+    $form = $form->add('tourdate_who', 'text', array('required' => true));
+    $form = $form->add('tourdate_when', 'date', array('required' => true, 'input' => 'string' ));
 	$form = $form->add('tourdate_where', 'text', array('required' => true));
-	$form = $form->add('tourdate_who', 'text', array('required' => true));
-	$form = $form->add('tourdate_when', 'text', array('required' => true));
 	$form = $form->add('tourdate_link', 'text', array('required' => false));
 	$form = $form->add('tourdate_published', 'checkbox', array('required' => false));
 
@@ -186,9 +186,9 @@ $app->match('/tourdate/edit/{id}', function ($id) use ($app) {
 
     
     $initial_data = array(
+        'tourdate_who' => $row_sql['tourdate_who'], 
+        'tourdate_when' => $row_sql['tourdate_when'], 
 		'tourdate_where' => $row_sql['tourdate_where'], 
-		'tourdate_who' => $row_sql['tourdate_who'], 
-		'tourdate_when' => $row_sql['tourdate_when'], 
 		'tourdate_link' => $row_sql['tourdate_link'], 
 		'tourdate_published' => $row_sql['tourdate_published']==1?true:false, 
     );
@@ -197,10 +197,10 @@ $app->match('/tourdate/edit/{id}', function ($id) use ($app) {
     $form = $app['form.factory']->createBuilder('form', $initial_data);
 
 
+    $form = $form->add('tourdate_who', 'text', array('required' => true));
+    $form = $form->add('tourdate_when', 'date', array('required' => true, 'input' => 'string' ));
 	$form = $form->add('tourdate_where', 'text', array('required' => true));
-	$form = $form->add('tourdate_who', 'text', array('required' => true));
-	$form = $form->add('tourdate_when', 'text', array('required' => true));
-	$form = $form->add('tourdate_link', 'text', array('required' => false));
+    $form = $form->add('tourdate_link', 'text', array('required' => false));
 	$form = $form->add('tourdate_published', 'checkbox', array('required' => false));
 
 
