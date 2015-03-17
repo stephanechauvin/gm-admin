@@ -1,0 +1,31 @@
+{% extends 'ag_menu.html.twig' %}
+
+{% block menu %}
+
+<li class="treeview {% if option is defined and (option == 'news_list' or option == 'news_create' or option == 'news_edit') %}active{% endif %}">
+    <a href="#">
+        <i class="fa fa-folder-o"></i>
+        <span>news</span>
+        <i class="fa pull-right fa-angle-right"></i>
+    </a>
+    <ul class="treeview-menu" style="display: none;">
+        <li {% if option is defined and option == 'news_list' %}class="active"{% endif %}><a href="{{ path('news_list') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> List</a></li>
+        <li {% if option is defined and option == 'news_create' %}class="active"{% endif %}><a href="{{ path('news_create') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> Create</a></li>
+    </ul>
+</li>
+
+<li class="treeview {% if option is defined and (option == 'tourdate_list' or option == 'tourdate_create' or option == 'tourdate_edit') %}active{% endif %}">
+    <a href="#">
+        <i class="fa fa-folder-o"></i>
+        <span>tourdate</span>
+        <i class="fa pull-right fa-angle-right"></i>
+    </a>
+    <ul class="treeview-menu" style="display: none;">
+        <li {% if option is defined and option == 'tourdate_list' %}class="active"{% endif %}><a href="{{ path('tourdate_list') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> List</a></li>
+        <li {% if option is defined and option == 'tourdate_create' %}class="active"{% endif %}><a href="{{ path('tourdate_create') }}" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> Create</a></li>
+    </ul>
+</li>
+
+
+
+{% endblock %}
