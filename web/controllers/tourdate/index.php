@@ -49,9 +49,6 @@ $app->match('/tourdate/list', function (Symfony\Component\HttpFoundation\Request
 		'tourdate_when', 
 		'tourdate_link', 
 		'tourdate_published', 
-		'tourdate_valide', 
-		'tourdate_created_at', 
-
     );
     
     $whereClause = "";
@@ -104,9 +101,6 @@ $app->match('/tourdate', function () use ($app) {
 		'tourdate_when', 
 		'tourdate_link', 
 		'tourdate_published', 
-		'tourdate_valide', 
-		'tourdate_created_at', 
-
     );
 
     $primary_key = "tourdate_id";	
@@ -128,10 +122,7 @@ $app->match('/tourdate/create', function () use ($app) {
 		'tourdate_who' => '', 
 		'tourdate_when' => '', 
 		'tourdate_link' => '', 
-		'tourdate_published' => '', 
-		'tourdate_valide' => '', 
-		'tourdate_created_at' => '', 
-
+		'tourdate_published' => '1', 
     );
 
     $form = $app['form.factory']->createBuilder('form', $initial_data);
@@ -143,8 +134,6 @@ $app->match('/tourdate/create', function () use ($app) {
 	$form = $form->add('tourdate_when', 'text', array('required' => true));
 	$form = $form->add('tourdate_link', 'text', array('required' => false));
 	$form = $form->add('tourdate_published', 'text', array('required' => true));
-	$form = $form->add('tourdate_valide', 'text', array('required' => true));
-	$form = $form->add('tourdate_created_at', 'text', array('required' => true));
 
 
     $form = $form->getForm();
@@ -156,8 +145,8 @@ $app->match('/tourdate/create', function () use ($app) {
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $update_query = "INSERT INTO `tourdate` (`tourdate_where`, `tourdate_who`, `tourdate_when`, `tourdate_link`, `tourdate_published`, `tourdate_valide`, `tourdate_created_at`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            $app['db']->executeUpdate($update_query, array($data['tourdate_where'], $data['tourdate_who'], $data['tourdate_when'], $data['tourdate_link'], $data['tourdate_published'], $data['tourdate_valide'], $data['tourdate_created_at']));            
+            $update_query = "INSERT INTO `tourdate` (`tourdate_where`, `tourdate_who`, `tourdate_when`, `tourdate_link`, `tourdate_published`) VALUES (?, ?, ?, ?, ?)";
+            $app['db']->executeUpdate($update_query, array($data['tourdate_where'], $data['tourdate_who'], $data['tourdate_when'], $data['tourdate_link'], $data['tourdate_published']));            
 
 
             $app['session']->getFlashBag()->add(
@@ -202,9 +191,6 @@ $app->match('/tourdate/edit/{id}', function ($id) use ($app) {
 		'tourdate_when' => $row_sql['tourdate_when'], 
 		'tourdate_link' => $row_sql['tourdate_link'], 
 		'tourdate_published' => $row_sql['tourdate_published'], 
-		'tourdate_valide' => $row_sql['tourdate_valide'], 
-		'tourdate_created_at' => $row_sql['tourdate_created_at'], 
-
     );
 
 
@@ -216,8 +202,6 @@ $app->match('/tourdate/edit/{id}', function ($id) use ($app) {
 	$form = $form->add('tourdate_when', 'text', array('required' => true));
 	$form = $form->add('tourdate_link', 'text', array('required' => false));
 	$form = $form->add('tourdate_published', 'text', array('required' => true));
-	$form = $form->add('tourdate_valide', 'text', array('required' => true));
-	$form = $form->add('tourdate_created_at', 'text', array('required' => true));
 
 
     $form = $form->getForm();
@@ -229,8 +213,8 @@ $app->match('/tourdate/edit/{id}', function ($id) use ($app) {
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $update_query = "UPDATE `tourdate` SET `tourdate_where` = ?, `tourdate_who` = ?, `tourdate_when` = ?, `tourdate_link` = ?, `tourdate_published` = ?, `tourdate_valide` = ?, `tourdate_created_at` = ? WHERE `tourdate_id` = ?";
-            $app['db']->executeUpdate($update_query, array($data['tourdate_where'], $data['tourdate_who'], $data['tourdate_when'], $data['tourdate_link'], $data['tourdate_published'], $data['tourdate_valide'], $data['tourdate_created_at'], $id));            
+            $update_query = "UPDATE `tourdate` SET `tourdate_where` = ?, `tourdate_who` = ?, `tourdate_when` = ?, `tourdate_link` = ?, `tourdate_published` = ? WHERE `tourdate_id` = ?";
+            $app['db']->executeUpdate($update_query, array($data['tourdate_where'], $data['tourdate_who'], $data['tourdate_when'], $data['tourdate_link'], $data['tourdate_published'], $id));            
 
 
             $app['session']->getFlashBag()->add(

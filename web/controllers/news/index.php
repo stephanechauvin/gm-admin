@@ -46,18 +46,17 @@ $app->match('/news/list', function (Symfony\Component\HttpFoundation\Request $re
 		'news_id', 
 		'news_texte', 
 		'news_date', 
-		'news_published', 
-		'news_valide', 
+        'news_published', 
 
     );
     
-    $whereClause = "";
+    $whereClause = "WHERE news_valide = 1 AND (";
     
     $i = 0;
     foreach($table_columns as $col){
         
         if ($i == 0) {
-           $whereClause = " WHERE";
+           $whereClause = $whereClause . " ";
         }
         
         if ($i > 0) {
@@ -68,6 +67,8 @@ $app->match('/news/list', function (Symfony\Component\HttpFoundation\Request $re
         
         $i = $i + 1;
     }
+
+    $whereClause = $whereClause . " )";
     
     $recordsTotal = $app['db']->executeQuery("SELECT * FROM `news`" . $whereClause . $orderClause)->rowCount();
     
@@ -99,8 +100,6 @@ $app->match('/news', function () use ($app) {
 		'news_texte', 
 		'news_date', 
 		'news_published', 
-		'news_valide', 
-
     );
 
     $primary_key = "news_id";	
@@ -119,10 +118,8 @@ $app->match('/news/create', function () use ($app) {
     
     $initial_data = array(
 		'news_texte' => '', 
-		'news_date' => '', 
-		'news_published' => '', 
-		'news_valide' => '', 
-
+		'news_date' => date("Y-m-d"), 
+		'news_published' => '1', 
     );
 
     $form = $app['form.factory']->createBuilder('form', $initial_data);
@@ -132,7 +129,6 @@ $app->match('/news/create', function () use ($app) {
 	$form = $form->add('news_texte', 'textarea', array('required' => true));
 	$form = $form->add('news_date', 'text', array('required' => true));
 	$form = $form->add('news_published', 'text', array('required' => true));
-	$form = $form->add('news_valide', 'text', array('required' => true));
 
 
     $form = $form->getForm();
@@ -144,8 +140,8 @@ $app->match('/news/create', function () use ($app) {
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $update_query = "INSERT INTO `news` (`news_texte`, `news_date`, `news_published`, `news_valide`) VALUES (?, ?, ?, ?)";
-            $app['db']->executeUpdate($update_query, array($data['news_texte'], $data['news_date'], $data['news_published'], $data['news_valide']));            
+            $update_query = "INSERT INTO `news` (`news_texte`, `news_date`, `news_published`) VALUES (?, ?, ?)";
+            $app['db']->executeUpdate($update_query, array($data['news_texte'], $data['news_date'], $data['news_published']));            
 
 
             $app['session']->getFlashBag()->add(
@@ -188,7 +184,6 @@ $app->match('/news/edit/{id}', function ($id) use ($app) {
 		'news_texte' => $row_sql['news_texte'], 
 		'news_date' => $row_sql['news_date'], 
 		'news_published' => $row_sql['news_published'], 
-		'news_valide' => $row_sql['news_valide'], 
 
     );
 
@@ -199,7 +194,6 @@ $app->match('/news/edit/{id}', function ($id) use ($app) {
 	$form = $form->add('news_texte', 'textarea', array('required' => true));
 	$form = $form->add('news_date', 'text', array('required' => true));
 	$form = $form->add('news_published', 'text', array('required' => true));
-	$form = $form->add('news_valide', 'text', array('required' => true));
 
 
     $form = $form->getForm();
@@ -211,8 +205,8 @@ $app->match('/news/edit/{id}', function ($id) use ($app) {
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $update_query = "UPDATE `news` SET `news_texte` = ?, `news_date` = ?, `news_published` = ?, `news_valide` = ? WHERE `news_id` = ?";
-            $app['db']->executeUpdate($update_query, array($data['news_texte'], $data['news_date'], $data['news_published'], $data['news_valide'], $id));            
+            $update_query = "UPDATE `news` SET `news_texte` = ?, `news_date` = ?, `news_published` = ? WHERE `news_id` = ?";
+            $app['db']->executeUpdate($update_query, array($data['news_texte'], $data['news_date'], $data['news_published'], $id));            
 
 
             $app['session']->getFlashBag()->add(
@@ -242,7 +236,7 @@ $app->match('/news/delete/{id}', function ($id) use ($app) {
     $row_sql = $app['db']->fetchAssoc($find_sql, array($id));
 
     if($row_sql){
-        $delete_query = "DELETE FROM `news` WHERE `news_id` = ?";
+        $delete_query = "UPDATE `news` SET `news_valide` = 0 WHERE `news_id` = ?";
         $app['db']->executeUpdate($delete_query, array($id));
 
         $app['session']->getFlashBag()->add(
